@@ -5,15 +5,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.bai.duan1.adapter.TruyenTranhAdapter;
+import com.bai.duan1.api.ApiLayTruyen;
+import com.bai.duan1.interfaces.LayTruyenVe;
 import com.bai.duan1.object.TruyenTranh;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LayTruyenVe {
 GridView gdvDSTruyen;
 TruyenTranhAdapter adapter;
 ArrayList<TruyenTranh> truyenTranhArrayList;
@@ -26,18 +34,11 @@ EditText edtTimKiem;
         anhXa();
         setUp();
         setClick();
+        new ApiLayTruyen(this).execute();
     }
     private void init(){
         truyenTranhArrayList = new ArrayList<>();
-        truyenTranhArrayList.add(new TruyenTranh("Bắt Đầu Từ Cửu Đầu Điểu","Chapter 108","https://truyencapnhat.com/cdn/truyencapnhat/20210626/doc-truyen-tranh-bat-dau-tu-cuu-dau-dieu.jpg"));
-        truyenTranhArrayList.add(new TruyenTranh("Quyển sổ báo thù","Chapter 61","https://truyencapnhat.com/cdn/truyencapnhat/20210516/doc-truyen-tranh-quyen-so-bao-thu.jpg"));
-        truyenTranhArrayList.add(new TruyenTranh("Tu Tiên Giả Đại Chiến Siêu Năng Lực","Chapter 192","https://truyencapnhat.com/cdn/truyencapnhat/20210516/doc-truyen-tranh-tu-tien-gia-dai-chien-sieu-nang-luc.jpg"));
-        truyenTranhArrayList.add(new TruyenTranh("Vua Đảo Hải Tặc - One Piece","Chapter 1053","https://truyencapnhat.com/cdn/truyencapnhat/20210516/doc-truyen-tranh-dao-hai-tac.jpg"));
-        truyenTranhArrayList.add(new TruyenTranh("Tây Du","Chapter 287","https://truyencapnhat.com/cdn/truyencapnhat/20210516/doc-truyen-tranh-tay-du.jpg"));
-        truyenTranhArrayList.add(new TruyenTranh("Ám Hành Ngự Sử","Chapter 156","https://truyencapnhat.com/cdn/truyencapnhat/20210516/doc-truyen-tranh-am-hanh-ngu-su.jpg"));
-        truyenTranhArrayList.add(new TruyenTranh("Anh Hùng Rác Rưởi","Chapter 115","https://truyencapnhat.com/cdn/truyencapnhat/20220109/doc-truyen-tranh-anh-hung-rac-ruoi.jpg"));
-        truyenTranhArrayList.add(new TruyenTranh("Thú Thụ Bất Thân","Chapter 138","https://truyencapnhat.com/cdn/truyencapnhat/20210516/doc-truyen-tranh-thu-thu-bat-than.jpg"));
-        truyenTranhArrayList.add(new TruyenTranh("Tôi Thăng Cấp Trong Lúc Ngủ","Chapter 33","https://truyencapnhat.com/cdn/truyencapnhat/20220320/doc-truyen-tranh-toi-thang-cap-trong-luc-ngu.jpg"));
+
 
         adapter = new TruyenTranhAdapter(this, 0 , truyenTranhArrayList);
     }
@@ -69,4 +70,33 @@ EditText edtTimKiem;
         });
     }
 
+    @Override
+    public void batDau() {
+        Toast.makeText(this,"Đang Lấy Về",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void ketThuc(String data) {
+        try {
+            truyenTranhArrayList.clear();
+            JSONArray arr = new JSONArray(data);
+            for (int i=0;i<arr.length();i++){
+                JSONObject o = arr.getJSONObject(i);
+                truyenTranhArrayList.add( new TruyenTranh(o));
+            }
+            adapter = new TruyenTranhAdapter(this, 0 , truyenTranhArrayList);
+            gdvDSTruyen.setAdapter(adapter);
+        }catch (JSONException e){
+
+        }
+    }
+
+    @Override
+    public void biLoi() {
+        Toast.makeText(this,"Lỗi Kết Nối",Toast.LENGTH_SHORT).show();
+    }
+
+    public void updata(View view) {
+        new ApiLayTruyen(this).execute();
+    }
 }

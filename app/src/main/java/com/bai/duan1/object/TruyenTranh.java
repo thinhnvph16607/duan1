@@ -1,9 +1,27 @@
 package com.bai.duan1.object;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class TruyenTranh {
     private String tenTruyen, tenChap,linkAnh;
 
+    /*
+    {
+        "tenTruyen"
+        "tenChap"
+        "linkAnh"
+    }
+    */
+
+
     public TruyenTranh() {
+    }
+
+    public TruyenTranh(JSONObject o) throws JSONException {
+        tenTruyen = o.getString("tenTruyen");
+        tenChap = o.getString("tenChap");
+        linkAnh = o.getString("linkAnh");
     }
 
     public TruyenTranh(String tenTruyen, String tenChap, String linkAnh) {

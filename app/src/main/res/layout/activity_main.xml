@@ -12,6 +12,16 @@
         android:layout_height="60dp"
         android:background="#353E45"
         android:gravity="center">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:src="@drawable/updata"
+            app:tint="#fff"
+            android:layout_alignParentRight="true"
+            android:onClick="updata"
+            />
         <EditText
             android:id="@+id/edtTimKiem"
             android:background="@drawable/bg_edt"
